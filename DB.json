@@ -1,0 +1,83 @@
+{
+    "test1": {
+        "password": "pass1",
+        "isOnline": true,
+        "msgs": {
+            "test2": [
+                [
+                    "sent",
+                    "hey there",
+                    "13-11-2020 19:11:45.922274"
+                ],
+                [
+                    "sent",
+                    "what is up",
+                    "13-11-2020 19:11:56.668965"
+                ],
+                [
+                    "sent",
+                    "how r u?",
+                    "13-11-2020 19:12:06.536953"
+                ]
+            ]
+        },
+        "frnd_reqts": [],
+        "friends": [
+            "test2",
+            "test3",
+            "test4"
+        ],
+        "timeline": []
+    },
+    "test2": {
+        "password": "pass2",
+        "isOnline": true,
+        "msgs": {
+            "test1": [
+                [
+                    "recieved",
+                    "hey there",
+                    "13-11-2020 19:11:45.971531",
+                    "not_seen"
+                ],
+                [
+                    "recieved",
+                    "what is up",
+                    "13-11-2020 19:11:56.668965",
+                    "not_seen"
+                ],
+                [
+                    "recieved",
+                    "how r u?",
+                    "13-11-2020 19:12:06.536953",
+                    "not_seen"
+                ]
+            ]
+        },
+        "frnd_reqts": [],
+        "friends": [
+            "test1"
+        ],
+        "timeline": []
+    },
+    "test3": {
+        "password": "pass3",
+        "isOnline": true,
+        "msgs": {},
+        "frnd_reqts": [],
+        "friends": [
+            "test1"
+        ],
+        "timeline": []
+    },
+    "test4": {
+        "password": "pass4",
+        "isOnline": false,
+        "msgs": {},
+        "frnd_reqts": [],
+        "friends": [
+            "test1"
+        ],
+        "timeline": []
+    }
+}
