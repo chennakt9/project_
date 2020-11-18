@@ -6,18 +6,8 @@
             "test2": [
                 [
                     "sent",
-                    "hey there",
-                    "13-11-2020 19:11:45.922274"
-                ],
-                [
-                    "sent",
-                    "what is up",
-                    "13-11-2020 19:11:56.668965"
-                ],
-                [
-                    "sent",
-                    "how r u?",
-                    "13-11-2020 19:12:06.536953"
+                    "hello hi.",
+                    "18-11-2020 21:13:15.886890"
                 ]
             ]
         },
@@ -36,20 +26,8 @@
             "test1": [
                 [
                     "recieved",
-                    "hey there",
-                    "13-11-2020 19:11:45.971531",
-                    "not_seen"
-                ],
-                [
-                    "recieved",
-                    "what is up",
-                    "13-11-2020 19:11:56.668965",
-                    "not_seen"
-                ],
-                [
-                    "recieved",
-                    "how r u?",
-                    "13-11-2020 19:12:06.536953",
+                    "hello hi.",
+                    "18-11-2020 21:13:15.886890",
                     "not_seen"
                 ]
             ]
@@ -78,6 +56,14 @@
         "friends": [
             "test1"
         ],
+        "timeline": []
+    },
+    "chenna": {
+        "password": "1234",
+        "isOnline": true,
+        "msgs": {},
+        "frnd_reqts": [],
+        "friends": [],
         "timeline": []
     }
 }

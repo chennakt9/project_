@@ -47,7 +47,7 @@ def chat_handler(user_name,client):
 
 	friends = users[user_name]['friends']
 
-	client.send(('**Online Users**\n'+'\n'.join(friends)+'\n\nChoose a friend to start messaging:').encode('utf-8'))
+	client.send(('**Your Friends **\n'+'\n'.join(friends)+'\n\nChoose a friend to start messaging:').encode('utf-8'))
 
 	while True:
 		target_friend = client.recv(1024).decode('utf-8')
@@ -82,14 +82,60 @@ def chat_handler(user_name,client):
 
 
 
+def register_handler(client):
+	client.send(('REgister  \n\n** Enter Email**').encode('utf-8'))
+	email = client.recv(1024).decode('utf-8')
+
+	client.send(('\n\n** Enter Username**').encode('utf-8'))
+	user_name = client.recv(1024).decode('utf-8')
+
+	client.send(('**Password**').encode('utf-8'))
+	pswd = client.recv(1024).decode('utf-8')
+
+	client.send(('**Confirm Password**').encode('utf-8'))
+	confirm_pswd = client.recv(1024).decode('utf-8')
+
+	if confirm_pswd!=pswd:
+		client.send(('Passwords not match..').encode('utf-8'))
+		client.close()
+		return None
+
+	users[user_name] = {
+        "password": pswd,
+        "isOnline": False,
+        "msgs": {},
+        "frnd_reqts": [],
+        "friends": [],
+        "timeline": []
+    }
+
+	client.send((f'Successfully REgister In as {email}').encode('utf-8'))
 
 
+
+
+	update_db() 
+
+	return email;
 
 
 def client_thread(client):
 
-		
-	user_name = login_handler(client) #login
+	homeoptions = '''
+	Choose an action:
+
+	1.REgiter
+	2.Login
+	'''
+	
+	client.send(homeoptions.encode('utf-8'))
+
+	opt = client.recv(1024).decode('utf-8')
+
+	if opt=='1':
+		register_handler(client) #register
+	elif opt=='2':
+		user_name = login_handler(client) #login
 
 	options = '''
 	Choose an action:
@@ -106,19 +152,46 @@ def client_thread(client):
 		data = client.recv(1024).decode('utf-8')
 
 		if data=='1': # private message
+
 			chat_handler(user_name, client)
 		
 		elif data=='2': # search registered users
-			client.send(('Not implemented yet').encode('uft-8'))
-		
+			client.send(('Not implemented yet').encode('utf-8'))
+			
 		elif data=='3': # view chats
-			client.send(('Not implemented yet').encode('uft-8'))
+			client.send(('Not implemented yet').encode('utf-8'))
 
 		elif data=='4': # Friend Options
-			client.send(('Not implemented yet').encode('uft-8'))
+			
+
+			while True:
+				
+				friend_options = '''
+  Choose an action:
+  1. view firends or  del friends
+  2. view friend requests --> acc or rej friend request
+  3. exit friend options
+								
+		'''
+				client.send(friend_options.encode('utf-8'))
+
+				opt = client.recv(1024).decode('utf-8')
+
+				if opt=='1':
+					pass
+				elif opt =='2':
+					pass
+				elif opt == '3':
+					break
+				else:
+					continue
+
+
+		
+			
 
 		elif data=='5': # Upload New post
-			client.send(('Not implemented yet').encode('uft-8'))
+			client.send(('Not implemented yet').encode('utf-8'))
 
 		elif data=='6': # logout
 			clients[user_name]['isOnline'] = False
