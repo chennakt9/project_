@@ -78,6 +78,88 @@ def chat_handler(user_name,client):
 
 				client.send(('\n'.join(all_msgs)).encode('utf-8'))
 
+def frndreqts_handler(user_name,client):
+
+	friendreqts = users[user_name]['frnd_reqts']
+
+	client.send(('**Your Friends requests **\n'+'\n'.join(friendreqts)+'\n\nChoose a request to accept or remove:').encode('utf-8'))
+
+	target_user = client.recv(1024).decode('utf-8')
+
+	if target_user in friendreqts:
+		homeoptions = '''
+	 Choose an action:
+
+	 1.accept
+	 2.remove
+	 '''
+		client.send(homeoptions.encode('utf-8'))
+
+		opt = client.recv(1024).decode('utf-8')
+
+		if opt=='1':
+			
+			users[user_name]['friends'].append(target_user)
+			users[user_name]['frnd_reqts'].remove(target_user)
+			users[target_user]['notifications'].append(f"{user_name} has accepted your request.")
+			
+			
+		elif opt=='2':
+			users[user_name]['frnd_reqts'].remove(target_user)
+	update_db() 
+
+def friends_handler(user_name,client):
+	
+	friends = users[user_name]['friends']
+
+	client.send(('**Your Friends **\n'+'\n'.join(friends)+'\n\nChoose a friend:').encode('utf-8'))
+
+	target_user = client.recv(1024).decode('utf-8')
+
+	if target_user in friends:
+		homeoptions = f'''
+	 Choose an action:
+
+	 1.{target_user}'s timeline
+	 2.{target_user}'s friends
+	 3.remove
+	 '''
+		client.send(homeoptions.encode('utf-8'))
+
+		opt = client.recv(1024).decode('utf-8')
+
+		if opt=='1':
+			pass #timeline work by anitha
+		
+		elif opt=='2':
+			target_friends = users[target_user]['friends']
+			client.send((f"**{target_user}'s Friends **\n"+'\n'.join(target_friends)).encode('utf-8'))
+		
+		elif opt=='3':
+			users[user_name]['friends'].remove(target_user)
+			users[target_user]['friends'].remove(user_name)
+
+		
+	update_db() 
+
+def Notifications_handler(user_name,client):
+
+	Notifications = users[user_name]['notifications']
+
+	client.send(("** Notifications **\n"+'\n'.join(Notifications)).encode('utf-8'))
+
+	update_db() 
+
+
+
+
+	
+
+
+
+
+
+	
 
 
 
@@ -141,9 +223,9 @@ def client_thread(client):
 	Choose an action:
 
 	1. Send Private Message | 5. Upload new post
-	2. Search Reg Users     | 6. Logout
-	3. View Chats           | 
-	4. Friend Options       | 
+	2. Search Reg Users     | 6. Notifications
+	3. View Chats           | 7. MyTimeline
+	4. Friend Options       | 8. logout
 	'''
 
 	client.send(options.encode('utf-8'))
@@ -168,7 +250,7 @@ def client_thread(client):
 				
 				friend_options = '''
   Choose an action:
-  1. view firends or  del friends
+  1. view friends 
   2. view friend requests --> acc or rej friend request
   3. exit friend options
 								
@@ -178,9 +260,9 @@ def client_thread(client):
 				opt = client.recv(1024).decode('utf-8')
 
 				if opt=='1':
-					pass
+					friends_handler(user_name,client)
 				elif opt =='2':
-					pass
+					frndreqts_handler(user_name,client)
 				elif opt == '3':
 					break
 				else:
@@ -193,7 +275,10 @@ def client_thread(client):
 		elif data=='5': # Upload New post
 			client.send(('Not implemented yet').encode('utf-8'))
 
-		elif data=='6': # logout
+		elif data=='6': # Notifications
+			Notifications_handler(user_name,client)
+
+		elif data=='8': # logout
 			clients[user_name]['isOnline'] = False
 			client.send(bytes('Logged out successfully !!'))
 			client.close()
