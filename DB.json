@@ -17,7 +17,9 @@
             "test3",
             "test4"
         ],
-        "timeline": []
+        "timeline": [],
+        "feed": [],
+        "notifications": []
     },
     "test2": {
         "password": "pass2",
@@ -36,7 +38,9 @@
         "friends": [
             "test1"
         ],
-        "timeline": []
+        "timeline": [],
+        "feed": [],
+        "notifications": []
     },
     "test3": {
         "password": "pass3",
@@ -46,17 +50,24 @@
         "friends": [
             "test1"
         ],
-        "timeline": []
+        "timeline": [],
+        "feed": [],
+        "notifications": [
+            "test4 has accepted your request."
+        ]
     },
     "test4": {
         "password": "pass4",
-        "isOnline": false,
+        "isOnline": true,
         "msgs": {},
         "frnd_reqts": [],
         "friends": [
-            "test1"
+            "test1",
+            "test3"
         ],
-        "timeline": []
+        "timeline": [],
+        "feed": [],
+        "notifications": []
     },
     "chenna": {
         "password": "1234",
@@ -64,6 +75,8 @@
         "msgs": {},
         "frnd_reqts": [],
         "friends": [],
-        "timeline": []
+        "timeline": [],
+        "feed": [],
+        "notifications": []
     }
 }
