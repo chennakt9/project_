@@ -2,13 +2,10 @@ import socket
 import threading
 import json
 import datetime
-
-HOST = '127.0.0.1'
-PORT = 12345
+import difflib
 
 
-
-users = json.load(open('DB.json'))
+f = json.load(open('DB.json'))
 
 
 
@@ -102,12 +99,33 @@ def frndreqts_handler(user_name,client):
 			users[user_name]['friends'].append(target_user)
 			users[user_name]['frnd_reqts'].remove(target_user)
 			users[target_user]['notifications'].append(f"{user_name} has accepted your request.")
+			users[target_user]['notifications'].append(user_name+" has accepted your request.")
+			
 			
 			
 		elif opt=='2':
 			users[user_name]['frnd_reqts'].remove(target_user)
 	update_db() 
+def search_handler(user_name,client):
+	registered_users= list(users.keys())
+	client.send(('**Search any registered Users **\n').encode('utf-8'))
+    user_searched = client.recv(1024).decode('utf-8')
+	while True:
+		matched_users=difflib.get_close_matches(user_searched, registered_users)
+		client.send(('**Your search suggestion **\n'+'\n'.join(matched_users)+'\n\nChoose a suggestion:').encode('utf-8'))
+		similar_user= client.recv(1024).decode('utf-8')
 
+		if similar_user in registered_users:
+			break;
+		else:
+			user_searched = similar_user
+
+	
+		    
+    client.send(('**Send a friend request to **\n'+'\n'.join(similar_user)).encode('utf-8'))
+    opt= client.recv(1024).decode('utf-8')
+	users[similar_user]['frnd_reqts'].append(user_name)
+	
 def friends_handler(user_name,client):
 	
 	friends = users[user_name]['friends']
@@ -202,6 +220,7 @@ def register_handler(client):
 	return email;
 
 
+
 def client_thread(client):
 
 	homeoptions = '''
@@ -290,7 +309,8 @@ def client_thread(client):
 
 
 
-
+HOST = '127.0.0.1'
+PORT = 12345
 
 		
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -310,7 +330,7 @@ while True:
 
 	# t1.join()
 
-
+	
 
 
 server.close()	
