@@ -129,7 +129,8 @@ def friends_handler(user_name,client):
 		opt = client.recv(1024).decode('utf-8')
 
 		if opt=='1':
-			pass #timeline work by anitha
+			pass
+			#some comment
 		
 		elif opt=='2':
 			target_friends = users[target_user]['friends']
