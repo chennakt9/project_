@@ -129,7 +129,8 @@ def frndreqts_handler(user_name,client):
 			users[user_name]['friends'].append(target_user)
 			users[user_name]['frnd_reqts'].remove(target_user)
 			users[target_user]['friends'].append(user_name)
-			users[target_user]['notifications'].append(f"{user_name} has accepted your request.")
+			users[target_user]['notifications'].append([f"{user_name} has accepted your request.", datetime.datetime.now().strftime('%d-%m-%Y %H:%M:%S.%f')])
+			client.send((f"You and {target_user} are now friends").encode('utf-8'))
 			
 			
 		elif opt=='2':
@@ -166,6 +167,7 @@ def friends_handler(user_name,client):
 		elif opt=='3':
 			users[user_name]['friends'].remove(target_user)
 			users[target_user]['friends'].remove(user_name)
+			client.send((f"You are no longer friends with {target_user}").encode('utf-8'))
 
 		
 	update_db(users) 
@@ -174,7 +176,15 @@ def Notifications_handler(user_name,client):
 
 	Notifications = users[user_name]['notifications']
 
-	client.send(("** Notifications **\n"+'\n'.join(Notifications)).encode('utf-8'))
+	arr = []
+	
+	for nf,t in Notifications:
+		arr.append(nf+"                   "+t)
+	
+		
+	client.send(("** Notifications **\n"+'\n'.join(arr[::-1])).encode('utf-8'))
+
+
 
 	update_db(users) 
 
@@ -210,7 +220,7 @@ def register_handler(client):
         "timeline": []
     }
 
-	client.send((f'Successfully REgister In as {email}').encode('utf-8'))
+	client.send((f'Successfully Registered In as {email}').encode('utf-8'))
 
 
 
@@ -226,7 +236,7 @@ def client_thread(client):
 	**Login/Register Page**
 	Choose an action:
 
-	1.REgiter
+	1.Register
 	2.Login
 	'''
 	
