@@ -2,6 +2,7 @@ import socket
 import threading
 import json
 import datetime
+import difflib
 import pprint
 
 #custom modules import
@@ -13,6 +14,7 @@ PORT = 12345
 
 
 users = json.load(open('DB.json')) #importing database
+
 
 
 
@@ -128,13 +130,39 @@ def frndreqts_handler(user_name,client):
 			
 			users[user_name]['friends'].append(target_user)
 			users[user_name]['frnd_reqts'].remove(target_user)
+
 			users[target_user]['notifications'].append(f"{user_name} has accepted your request.")
+
+			users[target_user]['friends'].append(user_name)
+			users[target_user]['notifications'].append([f"{user_name} has accepted your request.", datetime.datetime.now().strftime('%d-%m-%Y %H:%M:%S.%f')])
+			client.send((f"You and {target_user} are now friends").encode('utf-8'))
+
 			
 			
 		elif opt=='2':
 			users[user_name]['frnd_reqts'].remove(target_user)
-	update_db(users) 
 
+	update_db() 
+def search_handler(user_name,client):
+	registered_users= list(users.keys())
+	client.send(('**Search any registered Users **\n').encode('utf-8'))
+	user_searched = client.recv(1024).decode('utf-8')
+	while True:
+		matched_users=difflib.get_close_matches(user_searched, registered_users)
+		client.send(('**Your search suggestion **\n'+'\n'.join(matched_users)+'\n\nChoose a suggestion:').encode('utf-8'))
+		similar_user= client.recv(1024).decode('utf-8')
+
+		if similar_user in registered_users:
+			break
+		else:
+			user_searched = similar_user
+
+	update_db(users) 
+			
+	client.send(('**Send a friend request to **\n'+'\n'.join(similar_user)).encode('utf-8'))
+	opt= client.recv(1024).decode('utf-8')
+	users[similar_user]['frnd_reqts'].append(user_name)
+	
 def friends_handler(user_name,client):
 	
 	friends = users[user_name]['friends']
@@ -156,7 +184,8 @@ def friends_handler(user_name,client):
 		opt = client.recv(1024).decode('utf-8')
 
 		if opt=='1':
-			pass #timeline work by anitha
+			pass
+			#some comment
 		
 		elif opt=='2':
 			target_friends = users[target_user]['friends']
@@ -165,6 +194,7 @@ def friends_handler(user_name,client):
 		elif opt=='3':
 			users[user_name]['friends'].remove(target_user)
 			users[target_user]['friends'].remove(user_name)
+			client.send((f"You are no longer friends with {target_user}").encode('utf-8'))
 
 		
 	update_db(users) 
@@ -173,7 +203,15 @@ def Notifications_handler(user_name,client):
 
 	Notifications = users[user_name]['notifications']
 
-	client.send(("** Notifications **\n"+'\n'.join(Notifications)).encode('utf-8'))
+	arr = []
+	
+	for nf,t in Notifications:
+		arr.append(nf+"                   "+t)
+	
+		
+	client.send(("** Notifications **\n"+'\n'.join(arr[::-1])).encode('utf-8'))
+
+
 
 	update_db(users) 
 
@@ -201,6 +239,7 @@ def register_handler(client):
 		return None
 
 	users[user_name] = {
+
         "password": pswd,
         "friends": [],
         "isOnline": False,
@@ -211,7 +250,8 @@ def register_handler(client):
         "notifications": []
     }
 
-	client.send((f'Successfully REgister In as {email}').encode('utf-8'))
+
+	client.send((f'Successfully Registered In as {email}').encode('utf-8'))
 
 
 
@@ -221,13 +261,14 @@ def register_handler(client):
 	return email;
 
 
+
 def client_thread(client):
 
 	login_page_options = '''
 	**Login/Register Page**
 	Choose an action:
 
-	1.REgiter
+	1.Register
 	2.Login
 	'''
 	
@@ -311,7 +352,7 @@ def client_thread(client):
 			Notifications_handler(user_name,client)
 
 		elif data=='8': # logout
-			clients[user_name]['isOnline'] = False
+			client[user_name]['isOnline'] = False
 			client.send(bytes('Logged out successfully !!'))
 			client.close()
 
@@ -321,7 +362,8 @@ def client_thread(client):
 
 
 
-
+HOST = '127.0.0.1'
+PORT = 12345
 
 		
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -334,14 +376,13 @@ while True:
 	client, addr = server.accept()
 	print(f'Connected with {addr[0]}:{addr[1]}')
 	t1 = threading.Thread(target=client_thread,
-        args=(client,)
-    )
+		args=(client,)
+	)
 
 	t1.start()
 
 	# t1.join()
-
-
+	
 
 
 server.close()	

@@ -1,4 +1,4 @@
 arr = ["abc" , "cde" , "efg"]
 print(arr)
-t = "\n".join(arr)
+t = "-".join(arr)
 print(t)
