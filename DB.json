@@ -2,8 +2,8 @@
     "test1": {
         "password": "pass1",
         "friends": [
-            "test2",
             "test3",
+            "test2",
             "test4"
         ],
         "isOnline": true,
@@ -25,11 +25,21 @@
         "frnd_reqts": [],
         "timeline": [],
         "feed": [],
-        "notifications": []
+        "notifications": [
+            [
+                "test2 has accepted your request.",
+                "27-11-2020 23:42:27.152822"
+            ],
+            [
+                "test4 has accepted your request.",
+                "27-11-2020 23:53:45.387674"
+            ]
+        ]
     },
     "test2": {
         "password": "pass2",
         "friends": [
+            "test3",
             "test1"
         ],
         "isOnline": true,
@@ -56,9 +66,10 @@
     "test3": {
         "password": "pass3",
         "friends": [
-            "test1"
+            "test1",
+            "test2"
         ],
-        "isOnline": false,
+        "isOnline": true,
         "msgs": {},
         "frnd_reqts": [],
         "timeline": [],
@@ -70,7 +81,7 @@
         "friends": [
             "test1"
         ],
-        "isOnline": false,
+        "isOnline": true,
         "msgs": {},
         "frnd_reqts": [],
         "timeline": [],
