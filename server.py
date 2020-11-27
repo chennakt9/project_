@@ -2,21 +2,17 @@ import socket
 import threading
 import json
 import datetime
+import pprint
+
+#custom modules import
+from helpers import *
 
 HOST = '127.0.0.1'
 PORT = 12345
 
 
 
-users = json.load(open('DB.json'))
-
-
-
-def update_db():
-	parsed = json.dumps(users, indent=4)
-
-	with open('DB.json','w') as file:
-		file.write(parsed)
+users = json.load(open('DB.json')) #importing database
 
 
 
@@ -31,16 +27,41 @@ def login_handler(client):
 	if usr not in users or users[usr]['password'] != pswd:
 		client.send(('Invalid credentials..').encode('utf-8'))
 		client.close()
-		return None
+		return;
 
 	client.send((f'Successfully Logged In as {usr}').encode('utf-8'))
 
 	users[usr]['isOnline'] = True;
 
 
-	update_db() 
+	update_db(users) 
 
 	return usr;
+
+
+def view_messages_handler(client,user_name,target_friend):
+
+	global users
+	users = update_db(users.copy())
+	# pprint.pprint(users)
+	
+
+
+	messages_arr = []
+
+	if target_friend in users[user_name]['msgs']:
+
+		for msg in users[user_name]['msgs'][target_friend]:
+			if msg[0]=='sent':
+				m = f'        You: {msg[1]}'
+				messages_arr.append(m)
+			else:
+				m = f'Your Friend: {msg[1]}'
+				messages_arr.append(m)
+
+		msgs = "--------------------------------------------\n" + "\n".join(messages_arr) + "\n--------------------------------------------"
+		client.send((msgs).encode('utf-8'))
+
 
 
 def chat_handler(user_name,client):
@@ -55,28 +76,34 @@ def chat_handler(user_name,client):
 		if target_friend in users:
 			
 			if users[target_friend]['isOnline'] == True:
-				client.send(('Client is online start messaging..').encode('utf-8'))
+				client.send(('Your Friend is online start messaging..\n').encode('utf-8'))
 			else:
-				client.send(('Client is offline messages may be seen later'))
+				client.send(('Your Friend is offline, your messages may be seen later..').encode('utf-8'))
+			
+			view_messages_handler(client,user_name,target_friend) # View Previous messages
+
 			while True:
-				client.send(('Enter message:').encode('utf-8'))
+
+				
+				client.send(('\nEnter message || "m" to view messages || "q" to exit').encode('utf-8'))
 				messg = client.recv(1024).decode('utf-8')
+				
+				if messg.lower()=="q":
+					return
 
-				if target_friend not in users[user_name]['msgs']:
-					users[user_name]['msgs'][target_friend] = [['sent', messg, datetime.datetime.now().strftime('%d-%m-%Y %H:%M:%S.%f')]]
+				if messg.lower()=="m":
+
+					view_messages_handler(client,user_name,target_friend)
 				else:
-					users[user_name]['msgs'][target_friend].append(['sent', messg, datetime.datetime.now().strftime('%d-%m-%Y %H:%M:%S.%f')])
-
-				if user_name not in users[target_friend]['msgs']:
-					users[target_friend]['msgs'][user_name] = [['recieved', messg, datetime.datetime.now().strftime('%d-%m-%Y %H:%M:%S.%f'), 'not_seen']]
-				else:
-					users[target_friend]['msgs'][user_name].append(['recieved', messg, datetime.datetime.now().strftime('%d-%m-%Y %H:%M:%S.%f'), 'not_seen'])
-
-				update_db()
-
-				all_msgs = [msg[1] for msg in users[user_name]['msgs'][target_friend]]
-
-				client.send(('\n'.join(all_msgs)).encode('utf-8'))
+					
+					update_messages(users, user_name, target_friend, messg)
+					update_db(users)
+					
+					view_messages_handler(client,user_name,target_friend)
+			
+				
+		else:
+			client.send(('Enter a valid friend name ...').encode('utf-8'))
 
 def frndreqts_handler(user_name,client):
 
@@ -106,7 +133,7 @@ def frndreqts_handler(user_name,client):
 			
 		elif opt=='2':
 			users[user_name]['frnd_reqts'].remove(target_user)
-	update_db() 
+	update_db(users) 
 
 def friends_handler(user_name,client):
 	
@@ -140,7 +167,7 @@ def friends_handler(user_name,client):
 			users[target_user]['friends'].remove(user_name)
 
 		
-	update_db() 
+	update_db(users) 
 
 def Notifications_handler(user_name,client):
 
@@ -148,18 +175,9 @@ def Notifications_handler(user_name,client):
 
 	client.send(("** Notifications **\n"+'\n'.join(Notifications)).encode('utf-8'))
 
-	update_db() 
+	update_db(users) 
 
 
-
-
-	
-
-
-
-
-
-	
 
 
 
@@ -196,21 +214,22 @@ def register_handler(client):
 
 
 
-	update_db() 
+	update_db(users) 
 
 	return email;
 
 
 def client_thread(client):
 
-	homeoptions = '''
+	login_page_options = '''
+	**Login/Register Page**
 	Choose an action:
 
 	1.REgiter
 	2.Login
 	'''
 	
-	client.send(homeoptions.encode('utf-8'))
+	client.send(login_page_options.encode('utf-8'))
 
 	opt = client.recv(1024).decode('utf-8')
 
@@ -219,18 +238,21 @@ def client_thread(client):
 	elif opt=='2':
 		user_name = login_handler(client) #login
 
-	options = '''
+	
+
+	
+
+	while True:
+		home_page_options = '''
+	**Home Page**
 	Choose an action:
 
 	1. Send Private Message | 5. Upload new post
 	2. Search Reg Users     | 6. Notifications
-	3. View Chats           | 7. MyTimeline
+	3. View Chats           | 7. My Profile/TimeLine
 	4. Friend Options       | 8. logout
 	'''
-
-	client.send(options.encode('utf-8'))
-
-	while True:
+		client.send(home_page_options.encode('utf-8'))
 		data = client.recv(1024).decode('utf-8')
 
 		if data=='1': # private message
@@ -241,7 +263,14 @@ def client_thread(client):
 			client.send(('Not implemented yet').encode('utf-8'))
 			
 		elif data=='3': # view chats
-			client.send(('Not implemented yet').encode('utf-8'))
+			
+			friends = users[user_name]['friends']
+
+			client.send(('**Your Friends **\n'+'\n'.join(friends)+'\n\nChoose a friend:').encode('utf-8'))
+
+			target_friend = client.recv(1024).decode('utf-8')
+
+			view_messages_handler(client,user_name,target_friend)
 
 		elif data=='4': # Friend Options
 			
@@ -249,6 +278,7 @@ def client_thread(client):
 			while True:
 				
 				friend_options = '''
+  **Friend-Options Page**
   Choose an action:
   1. view friends 
   2. view friend requests --> acc or rej friend request

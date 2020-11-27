@@ -1,80 +1,78 @@
 {
     "test1": {
         "password": "pass1",
-        "isOnline": true,
-        "msgs": {
-            "test2": [
-                [
-                    "sent",
-                    "hello hi.",
-                    "18-11-2020 21:13:15.886890"
-                ]
-            ]
-        },
-        "frnd_reqts": [],
         "friends": [
             "test2",
             "test3",
             "test4"
         ],
+        "isOnline": true,
+        "msgs": {
+            "test2": [
+                [
+                    "sent",
+                    "hey man",
+                    "27-11-2020 18:22:51.148040"
+                ],
+                [
+                    "recieved",
+                    "yo wassup",
+                    "27-11-2020 18:23:11.157955",
+                    "not_seen"
+                ]
+            ]
+        },
+        "frnd_reqts": [],
         "timeline": [],
         "feed": [],
         "notifications": []
     },
     "test2": {
         "password": "pass2",
+        "friends": [
+            "test1"
+        ],
         "isOnline": true,
         "msgs": {
             "test1": [
                 [
                     "recieved",
-                    "hello hi.",
-                    "18-11-2020 21:13:15.886890",
+                    "hey man",
+                    "27-11-2020 18:22:51.148040",
                     "not_seen"
+                ],
+                [
+                    "sent",
+                    "yo wassup",
+                    "27-11-2020 18:23:11.156958"
                 ]
             ]
         },
         "frnd_reqts": [],
-        "friends": [
-            "test1"
-        ],
         "timeline": [],
         "feed": [],
         "notifications": []
     },
     "test3": {
         "password": "pass3",
-        "isOnline": true,
-        "msgs": {},
-        "frnd_reqts": [],
         "friends": [
             "test1"
         ],
-        "timeline": [],
-        "feed": [],
-        "notifications": [
-            "test4 has accepted your request."
-        ]
-    },
-    "test4": {
-        "password": "pass4",
-        "isOnline": true,
+        "isOnline": false,
         "msgs": {},
         "frnd_reqts": [],
-        "friends": [
-            "test1",
-            "test3"
-        ],
         "timeline": [],
         "feed": [],
         "notifications": []
     },
-    "chenna": {
-        "password": "1234",
-        "isOnline": true,
+    "test4": {
+        "password": "pass4",
+        "friends": [
+            "test1"
+        ],
+        "isOnline": false,
         "msgs": {},
         "frnd_reqts": [],
-        "friends": [],
         "timeline": [],
         "feed": [],
         "notifications": []
