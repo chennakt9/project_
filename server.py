@@ -128,6 +128,7 @@ def frndreqts_handler(user_name,client):
 			
 			users[user_name]['friends'].append(target_user)
 			users[user_name]['frnd_reqts'].remove(target_user)
+			users[target_user]['friends'].append(user_name)
 			users[target_user]['notifications'].append(f"{user_name} has accepted your request.")
 			
 			
