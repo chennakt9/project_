@@ -109,21 +109,21 @@ def frndreqts_handler(user_name,client):
 def search_handler(user_name,client):
 	registered_users= list(users.keys())
 	client.send(('**Search any registered Users **\n').encode('utf-8'))
-    user_searched = client.recv(1024).decode('utf-8')
+	user_searched = client.recv(1024).decode('utf-8')
 	while True:
 		matched_users=difflib.get_close_matches(user_searched, registered_users)
 		client.send(('**Your search suggestion **\n'+'\n'.join(matched_users)+'\n\nChoose a suggestion:').encode('utf-8'))
 		similar_user= client.recv(1024).decode('utf-8')
 
 		if similar_user in registered_users:
-			break;
+			break
 		else:
 			user_searched = similar_user
 
 	
-		    
-    client.send(('**Send a friend request to **\n'+'\n'.join(similar_user)).encode('utf-8'))
-    opt= client.recv(1024).decode('utf-8')
+			
+	client.send(('**Send a friend request to **\n'+'\n'.join(similar_user)).encode('utf-8'))
+	opt= client.recv(1024).decode('utf-8')
 	users[similar_user]['frnd_reqts'].append(user_name)
 	
 def friends_handler(user_name,client):
@@ -202,13 +202,13 @@ def register_handler(client):
 		return None
 
 	users[user_name] = {
-        "password": pswd,
-        "isOnline": False,
-        "msgs": {},
-        "frnd_reqts": [],
-        "friends": [],
-        "timeline": []
-    }
+		"password": pswd,
+		"isOnline": False,
+		"msgs": {},
+		"frnd_reqts": [],
+		"friends": [],
+		"timeline": []
+	}
 
 	client.send((f'Successfully REgister In as {email}').encode('utf-8'))
 
@@ -299,7 +299,7 @@ def client_thread(client):
 			Notifications_handler(user_name,client)
 
 		elif data=='8': # logout
-			clients[user_name]['isOnline'] = False
+			client[user_name]['isOnline'] = False
 			client.send(bytes('Logged out successfully !!'))
 			client.close()
 
@@ -323,13 +323,12 @@ while True:
 	client, addr = server.accept()
 	print(f'Connected with {addr[0]}:{addr[1]}')
 	t1 = threading.Thread(target=client_thread,
-        args=(client,)
-    )
+		args=(client,)
+	)
 
 	t1.start()
 
 	# t1.join()
-
 	
 
 
