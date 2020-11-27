@@ -202,11 +202,13 @@ def register_handler(client):
 
 	users[user_name] = {
         "password": pswd,
+        "friends": [],
         "isOnline": False,
         "msgs": {},
         "frnd_reqts": [],
-        "friends": [],
-        "timeline": []
+        "timeline": [],
+        "feed": [],
+        "notifications": []
     }
 
 	client.send((f'Successfully REgister In as {email}').encode('utf-8'))
