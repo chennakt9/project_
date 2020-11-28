@@ -142,27 +142,79 @@ def frndreqts_handler(user_name,client):
 		elif opt=='2':
 			users[user_name]['frnd_reqts'].remove(target_user)
 
-	update_db() 
+	update_db(users) 
 def search_handler(user_name,client):
 	registered_users= list(users.keys())
 	client.send(('**Search any registered Users **\n').encode('utf-8'))
 	user_searched = client.recv(1024).decode('utf-8')
-	while True:
-		matched_users=difflib.get_close_matches(user_searched, registered_users)
-		client.send(('**Your search suggestion **\n'+'\n'.join(matched_users)+'\n\nChoose a suggestion:').encode('utf-8'))
-		similar_user= client.recv(1024).decode('utf-8')
-
-		if similar_user in registered_users:
-			break
-		else:
-			user_searched = similar_user
-
-	update_db(users) 
-			
-	client.send(('**Send a friend request to **\n'+'\n'.join(similar_user)).encode('utf-8'))
-	opt= client.recv(1024).decode('utf-8')
-	users[similar_user]['frnd_reqts'].append(user_name)
 	
+
+	if user_searched not in registered_users:
+		while True:
+			matched_users=difflib.get_close_matches(user_searched, registered_users)
+			client.send(('**Your search suggestion **\n'+'\n'.join(matched_users)+'\n\nChoose a suggestion:').encode('utf-8'))
+			similar_user= client.recv(1024).decode('utf-8')
+
+			if similar_user in registered_users:
+				break
+			else:
+				user_searched = similar_user
+		view_timeline_handler(user_name,client,"others")
+		client.send((f'1. Enter a friend request to : {similar_user}').encode('utf-8'))
+		
+		opt= client.recv(1024).decode('utf-8')
+		if opt == "1":
+			
+			users[similar_user]['frnd_reqts'].append(user_name)
+			client.send((f'Your request sucessfully sent  to: {similar_user}').encode('utf-8'))
+
+
+	 
+	else:		
+		view_timeline_handler(user_name,client,"others")
+		client.send((f'1. Enter a friend request to : {user_searched}').encode('utf-8'))
+		
+		opt= client.recv(1024).decode('utf-8')
+
+		if opt == "1":
+			
+			users[user_searched]['frnd_reqts'].append(user_name)
+			client.send((f'Your request sucessfully sent  to: {user_searched}').encode('utf-8'))
+
+
+	update_db(users)
+def view_timeline_handler(user_name,client,type):
+
+	timeline = users[user_name]['posts']
+
+	arr =[]
+	if type=="other":
+
+		
+
+		for i in timeline:
+
+			if i[2]=='public' or  i[2]=='private':
+
+				string = "   ".join(i)
+				arr.append(string)
+
+	
+	elif type=="own":
+
+
+		for i in timeline:
+
+			if i[2]=='public' or  i[2]=='private' or i[2]=='strictly_private':
+
+				string = "   ".join(i)
+				arr.append(string)
+
+	
+	prof = " view profile details \n--------------------------------------------\n" + "\n".join(arr) + "\n--------------------------------------------"
+	client.send((prof).encode('utf-8'))
+
+
 def friends_handler(user_name,client):
 	
 	friends = users[user_name]['friends']
@@ -184,7 +236,7 @@ def friends_handler(user_name,client):
 		opt = client.recv(1024).decode('utf-8')
 
 		if opt=='1':
-			pass
+			view_timeline_handler(target_user,client,'others')
 			#some comment
 		
 		elif opt=='2':
@@ -303,8 +355,7 @@ def client_thread(client):
 			chat_handler(user_name, client)
 		
 		elif data=='2': # search registered users
-			client.send(('Not implemented yet').encode('utf-8'))
-			
+			search_handler(user_name,client)			
 		elif data=='3': # view chats
 			
 			friends = users[user_name]['friends']
@@ -350,7 +401,8 @@ def client_thread(client):
 
 		elif data=='6': # Notifications
 			Notifications_handler(user_name,client)
-
+		elif data =='7': #My Profile/My Timeline
+			view_timeline_handler(user_name,client,"own")
 		elif data=='8': # logout
 			client[user_name]['isOnline'] = False
 			client.send(bytes('Logged out successfully !!'))
