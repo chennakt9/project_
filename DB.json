@@ -23,7 +23,23 @@
             ]
         },
         "frnd_reqts": [],
-        "timeline": [],
+        "posts": [
+            [
+                "Status 1",
+                "time1",
+                "public"
+            ],
+            [
+                "Status 2",
+                "time2",
+                "private"
+            ],
+            [
+                "Status 3",
+                "time3",
+                "strictly_private"
+            ]
+        ],
         "feed": [],
         "notifications": [
             [
@@ -58,8 +74,10 @@
                 ]
             ]
         },
-        "frnd_reqts": [],
-        "timeline": [],
+        "frnd_reqts": [
+            "test4"
+        ],
+        "posts": [],
         "feed": [],
         "notifications": []
     },
@@ -71,8 +89,10 @@
         ],
         "isOnline": true,
         "msgs": {},
-        "frnd_reqts": [],
-        "timeline": [],
+        "frnd_reqts": [
+            "test4"
+        ],
+        "posts": [],
         "feed": [],
         "notifications": []
     },
@@ -84,7 +104,7 @@
         "isOnline": true,
         "msgs": {},
         "frnd_reqts": [],
-        "timeline": [],
+        "posts": [],
         "feed": [],
         "notifications": []
     }
