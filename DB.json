@@ -64,6 +64,16 @@
                 "Status 3",
                 "time3",
                 "strictly_private"
+            ],
+            [
+                "Hey this is my first status...!",
+                "29-11-2020 09:48:10.858702",
+                "1"
+            ],
+            [
+                "my second status..",
+                "29-11-2020 09:55:34.512095",
+                "public"
             ]
         ],
         "feed": [],
@@ -133,7 +143,13 @@
             "test4"
         ],
         "posts": [],
-        "feed": [],
+        "feed": [
+            [
+                "my second status..",
+                "29-11-2020 09:55:34.512095",
+                "public"
+            ]
+        ],
         "notifications": []
     },
     "test3": {
@@ -148,7 +164,13 @@
             "test4"
         ],
         "posts": [],
-        "feed": [],
+        "feed": [
+            [
+                "my second status..",
+                "29-11-2020 09:55:34.512095",
+                "public"
+            ]
+        ],
         "notifications": []
     },
     "test4": {
@@ -160,7 +182,13 @@
         "msgs": {},
         "frnd_reqts": [],
         "posts": [],
-        "feed": [],
+        "feed": [
+            [
+                "my second status..",
+                "29-11-2020 09:55:34.512095",
+                "public"
+            ]
+        ],
         "notifications": []
     }
 }

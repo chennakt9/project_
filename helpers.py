@@ -1,7 +1,11 @@
 import datetime
 import json
 import ast
-import time
+
+
+
+users = json.load(open('DB.json')) #importing database
+session = json.load(open('SESSION.json')) #importing session management database
 
 
 def update_db(users):
