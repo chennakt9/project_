@@ -7,86 +7,18 @@
             "test4"
         ],
         "isOnline": true,
-        "msgs": {
-            "test2": [
-                [
-                    "sent",
-                    "hey man",
-                    "27-11-2020 18:22:51.148040"
-                ],
-                [
-                    "recieved",
-                    "yo wassup",
-                    "27-11-2020 18:23:11.157955",
-                    "not_seen"
-                ],
-                [
-                    "recieved",
-                    "hello",
-                    "28-11-2020 04:30:49.585975",
-                    "not_seen"
-                ],
-                [
-                    "sent",
-                    "test2",
-                    "28-11-2020 17:21:36.835888"
-                ],
-                [
-                    "sent",
-                    "test2",
-                    "28-11-2020 17:38:52.164049"
-                ],
-                [
-                    "sent",
-                    "test2",
-                    "28-11-2020 17:39:21.437861"
-                ],
-                [
-                    "sent",
-                    "test2",
-                    "28-11-2020 17:48:09.433669"
-                ]
-            ]
-        },
+        "msgs": {},
         "frnd_reqts": [],
         "posts": [
             [
-                "Status 1",
-                "time1",
-                "public"
-            ],
-            [
-                "Status 2",
-                "time2",
-                "private"
-            ],
-            [
-                "Status 3",
-                "time3",
-                "strictly_private"
-            ],
-            [
-                "Hey this is my first status...!",
-                "29-11-2020 09:48:10.858702",
-                "1"
-            ],
-            [
-                "my second status..",
-                "29-11-2020 09:55:34.512095",
+                "test1",
+                "Hey there, this is my first post yo !",
+                "29-11-2020 16:30:43.880988",
                 "public"
             ]
         ],
         "feed": [],
-        "notifications": [
-            [
-                "test2 has accepted your request.",
-                "27-11-2020 23:42:27.152822"
-            ],
-            [
-                "test4 has accepted your request.",
-                "27-11-2020 23:53:45.387674"
-            ]
-        ]
+        "notifications": []
     },
     "test2": {
         "password": "pass2",
@@ -95,58 +27,16 @@
             "test1"
         ],
         "isOnline": true,
-        "msgs": {
-            "test1": [
-                [
-                    "recieved",
-                    "hey man",
-                    "27-11-2020 18:22:51.148040",
-                    "not_seen"
-                ],
-                [
-                    "sent",
-                    "yo wassup",
-                    "27-11-2020 18:23:11.156958"
-                ],
-                [
-                    "sent",
-                    "hello",
-                    "28-11-2020 04:30:49.553334"
-                ],
-                [
-                    "recieved",
-                    "test2",
-                    "28-11-2020 17:21:36.899643",
-                    "not_seen"
-                ],
-                [
-                    "recieved",
-                    "test2",
-                    "28-11-2020 17:38:52.164049",
-                    "not_seen"
-                ],
-                [
-                    "recieved",
-                    "test2",
-                    "28-11-2020 17:39:21.438862",
-                    "not_seen"
-                ],
-                [
-                    "recieved",
-                    "test2",
-                    "28-11-2020 17:48:09.433669",
-                    "not_seen"
-                ]
-            ]
-        },
+        "msgs": {},
         "frnd_reqts": [
             "test4"
         ],
         "posts": [],
         "feed": [
             [
-                "my second status..",
-                "29-11-2020 09:55:34.512095",
+                "test1",
+                "Hey there, this is my first post yo !",
+                "29-11-2020 16:30:43.880988",
                 "public"
             ]
         ],
@@ -166,8 +56,9 @@
         "posts": [],
         "feed": [
             [
-                "my second status..",
-                "29-11-2020 09:55:34.512095",
+                "test1",
+                "Hey there, this is my first post yo !",
+                "29-11-2020 16:30:43.880988",
                 "public"
             ]
         ],
@@ -184,8 +75,9 @@
         "posts": [],
         "feed": [
             [
-                "my second status..",
-                "29-11-2020 09:55:34.512095",
+                "test1",
+                "Hey there, this is my first post yo !",
+                "29-11-2020 16:30:43.880988",
                 "public"
             ]
         ],

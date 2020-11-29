@@ -20,7 +20,7 @@ def upload_new_post_handler(client,user_name):
 		visibility = 'strictly_private'
 	
 	time_stamp = datetime.datetime.now().strftime('%d-%m-%Y %H:%M:%S.%f')
-	post = [status, time_stamp, visibility]
+	post = [user_name, status, time_stamp, visibility]
 
 	users[user_name]['posts'].append(post)
 
