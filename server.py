@@ -4,6 +4,10 @@ import json
 import datetime
 import difflib
 import pprint
+import ast
+import random
+import string
+import sys
 
 #custom modules import
 from helpers import *
@@ -14,31 +18,16 @@ PORT = 12345
 
 
 users = json.load(open('DB.json')) #importing database
+session = json.load(open('SESSION.json')) #importing session management database 
 
+for cookie in list(session):
+	curr_datetime = datetime.datetime.now()
+	cookie_datetime = datetime.datetime.strptime(session[cookie]['expires_on'], '%d-%m-%Y %H:%M:%S.%f')
 
+	if cookie_datetime<curr_datetime:
+		del session[cookie]
+		update_session(session)
 
-
-def login_handler(client):
-	client.send(('Log in... \n\n**Username**').encode('utf-8'))
-	usr = client.recv(1024).decode('utf-8')
-
-	client.send(('**Password**').encode('utf-8'))
-	pswd = client.recv(1024).decode('utf-8')
-
-
-	if usr not in users or users[usr]['password'] != pswd:
-		client.send(('Invalid credentials..').encode('utf-8'))
-		client.close()
-		return;
-
-	client.send((f'Successfully Logged In as {usr}').encode('utf-8'))
-
-	users[usr]['isOnline'] = True;
-
-
-	update_db(users) 
-
-	return usr;
 
 
 def view_messages_handler(client,user_name,target_friend):
@@ -47,8 +36,6 @@ def view_messages_handler(client,user_name,target_friend):
 	users = update_db(users.copy())
 	# pprint.pprint(users)
 	
-
-
 	messages_arr = []
 
 	if target_friend in users[user_name]['msgs']:
@@ -73,8 +60,8 @@ def chat_handler(user_name,client):
 	client.send(('**Your Friends **\n'+'\n'.join(friends)+'\n\nChoose a friend to start messaging:').encode('utf-8'))
 
 	while True:
-		target_friend = client.recv(1024).decode('utf-8')
-
+		target_friend, cookies = recvData(client, 1024)
+		
 		if target_friend in users:
 			
 			if users[target_friend]['isOnline'] == True:
@@ -88,7 +75,7 @@ def chat_handler(user_name,client):
 
 				
 				client.send(('\nEnter message || "m" to view messages || "q" to exit').encode('utf-8'))
-				messg = client.recv(1024).decode('utf-8')
+				messg, cookies = recvData(client, 1024)
 				
 				if messg.lower()=="q":
 					return
@@ -113,7 +100,7 @@ def frndreqts_handler(user_name,client):
 
 	client.send(('**Your Friends requests **\n'+'\n'.join(friendreqts)+'\n\nChoose a request to accept or remove:').encode('utf-8'))
 
-	target_user = client.recv(1024).decode('utf-8')
+	target_user, cookies = recvData(client, 1024)
 
 	if target_user in friendreqts:
 		homeoptions = '''
@@ -124,7 +111,7 @@ def frndreqts_handler(user_name,client):
 	 '''
 		client.send(homeoptions.encode('utf-8'))
 
-		opt = client.recv(1024).decode('utf-8')
+		opt, cookies = recvData(client, 1024)
 
 		if opt=='1':
 			
@@ -146,14 +133,14 @@ def frndreqts_handler(user_name,client):
 def search_handler(user_name,client):
 	registered_users= list(users.keys())
 	client.send(('**Search any registered Users **\n').encode('utf-8'))
-	user_searched = client.recv(1024).decode('utf-8')
+	user_searched, cookies = recvData(client, 1024)
 	
 
 	if user_searched not in registered_users:
 		while True:
 			matched_users=difflib.get_close_matches(user_searched, registered_users)
 			client.send(('**Your search suggestion **\n'+'\n'.join(matched_users)+'\n\nChoose a suggestion:').encode('utf-8'))
-			similar_user= client.recv(1024).decode('utf-8')
+			similar_use, cookiesr= recvData(client, 1024)
 
 			if similar_user in registered_users:
 				break
@@ -162,7 +149,7 @@ def search_handler(user_name,client):
 		view_timeline_handler(user_name,client,"others")
 		client.send((f'1. Enter a friend request to : {similar_user}').encode('utf-8'))
 		
-		opt= client.recv(1024).decode('utf-8')
+		op, cookiest= recvData(client, 1024)
 		if opt == "1":
 			
 			users[similar_user]['frnd_reqts'].append(user_name)
@@ -174,7 +161,7 @@ def search_handler(user_name,client):
 		view_timeline_handler(user_name,client,"others")
 		client.send((f'1. Enter a friend request to : {user_searched}').encode('utf-8'))
 		
-		opt= client.recv(1024).decode('utf-8')
+		op, cookiest= recvData(client, 1024)
 
 		if opt == "1":
 			
@@ -196,8 +183,8 @@ def view_timeline_handler(user_name,client,type):
 
 			if i[2]=='public' or  i[2]=='private':
 
-				string = "   ".join(i)
-				arr.append(string)
+				strng = "   ".join(i)
+				arr.append(strng)
 
 	
 	elif type=="own":
@@ -207,8 +194,8 @@ def view_timeline_handler(user_name,client,type):
 
 			if i[2]=='public' or  i[2]=='private' or i[2]=='strictly_private':
 
-				string = "   ".join(i)
-				arr.append(string)
+				strng = "   ".join(i)
+				arr.append(strng)
 
 	
 	prof = " view profile details \n--------------------------------------------\n" + "\n".join(arr) + "\n--------------------------------------------"
@@ -221,7 +208,7 @@ def friends_handler(user_name,client):
 
 	client.send(('**Your Friends **\n'+'\n'.join(friends)+'\n\nChoose a friend:').encode('utf-8'))
 
-	target_user = client.recv(1024).decode('utf-8')
+	target_user, cookies = recvData(client, 1024)
 
 	if target_user in friends:
 		homeoptions = f'''
@@ -233,7 +220,7 @@ def friends_handler(user_name,client):
 	 '''
 		client.send(homeoptions.encode('utf-8'))
 
-		opt = client.recv(1024).decode('utf-8')
+		opt, cookies = recvData(client, 1024)
 
 		if opt=='1':
 			view_timeline_handler(target_user,client,'others')
@@ -274,16 +261,16 @@ def Notifications_handler(user_name,client):
 
 def register_handler(client):
 	client.send(('REgister  \n\n** Enter Email**').encode('utf-8'))
-	email = client.recv(1024).decode('utf-8')
+	email, cookies = recvData(client, 1024)
 
 	client.send(('\n\n** Enter Username**').encode('utf-8'))
-	user_name = client.recv(1024).decode('utf-8')
+	user_name, cookies = recvData(client, 1024)
 
 	client.send(('**Password**').encode('utf-8'))
-	pswd = client.recv(1024).decode('utf-8')
+	pswd, cookies = recvData(client, 1024)
 
 	client.send(('**Confirm Password**').encode('utf-8'))
-	confirm_pswd = client.recv(1024).decode('utf-8')
+	confirm_pswd, cookies = recvData(client, 1024)
 
 	if confirm_pswd!=pswd:
 		client.send(('Passwords not match..').encode('utf-8'))
@@ -297,7 +284,7 @@ def register_handler(client):
         "isOnline": False,
         "msgs": {},
         "frnd_reqts": [],
-        "timeline": [],
+        "posts": [],
         "feed": [],
         "notifications": []
     }
@@ -313,25 +300,73 @@ def register_handler(client):
 	return email;
 
 
+def login_handler(client):
+	client.send(('Log in... \n\n**Username**').encode('utf-8'))
+	
+	usr, cookies = recvData(client, 1024)
+
+	client.send(('**Password**').encode('utf-8'))
+	pswd, cookies = recvData(client, 1024)
+
+
+	if usr not in users or users[usr]['password'] != pswd:
+		client.send(('Invalid credentials..').encode('utf-8'))
+		return None;
+
+	client.send((f'Successfully Logged In as {usr}').encode('utf-8'))
+
+	users[usr]['isOnline'] = True;
+
+
+	new_cookie = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+	set_cookie(client,session,usr,new_cookie)
+	
+
+	update_db(users) 
+
+	return usr;
+
+
 
 def client_thread(client):
 
-	login_page_options = '''
-	**Login/Register Page**
-	Choose an action:
+	while True:
 
-	1.Register
-	2.Login
-	'''
-	
-	client.send(login_page_options.encode('utf-8'))
+		login_page_options = '''
+		**Login/Register Page**
+		Choose an action:
 
-	opt = client.recv(1024).decode('utf-8')
+		1.Register
+		2.Login
+		'''
+		
+		client.send(login_page_options.encode('utf-8'))
 
-	if opt=='1':
-		register_handler(client) #register
-	elif opt=='2':
-		user_name = login_handler(client) #login
+		opt, cookies = recvData(client, 1024)
+
+		if opt=='1':
+			register_handler(client) #register
+		elif opt=='2':
+
+			isLoggedIn = False
+
+			for cookie in cookies:
+				if cookie in session:
+					isLoggedIn = True
+					break
+			
+			if isLoggedIn==True:
+				user_name = session[cookie]['user']
+				client.send((f'Successfully Logged In as {user_name}').encode('utf-8'))
+				break
+			else:
+
+				user_name = login_handler(client) #login
+
+				if user_name is not None:
+					break
+				else:
+					continue
 
 	
 
@@ -348,7 +383,10 @@ def client_thread(client):
 	4. Friend Options       | 8. logout
 	'''
 		client.send(home_page_options.encode('utf-8'))
-		data = client.recv(1024).decode('utf-8')
+
+		data, cookies = recvData(client, 1024)
+
+
 
 		if data=='1': # private message
 
@@ -362,7 +400,7 @@ def client_thread(client):
 
 			client.send(('**Your Friends **\n'+'\n'.join(friends)+'\n\nChoose a friend:').encode('utf-8'))
 
-			target_friend = client.recv(1024).decode('utf-8')
+			target_friend, cookies = recvData(client, 1024)
 
 			view_messages_handler(client,user_name,target_friend)
 
@@ -381,7 +419,7 @@ def client_thread(client):
 		'''
 				client.send(friend_options.encode('utf-8'))
 
-				opt = client.recv(1024).decode('utf-8')
+				opt, cookies = recvData(client, 1024)
 
 				if opt=='1':
 					friends_handler(user_name,client)
@@ -404,9 +442,26 @@ def client_thread(client):
 		elif data =='7': #My Profile/My Timeline
 			view_timeline_handler(user_name,client,"own")
 		elif data=='8': # logout
-			client[user_name]['isOnline'] = False
-			client.send(bytes('Logged out successfully !!'))
+			users[user_name]['isOnline'] = False
+			
+			update_db(users) #Update users DB
+			for cookie in session:
+				if session[cookie]['user']==user_name:
+					break
+			
+			del session[cookie]
+			update_session(session)   # update server side session after logout
+
+			cookies = json.load(open('cookie_file_1.json'))   # update client side cookies after logout
+			del cookies[cookie]    
+			parsed = json.dumps(cookies, indent=4)    
+			with open('cookie_file_1.json','w') as file:
+				file.write(parsed)
+
+			client.send(('Logged out successfully !!').encode('utf-8'))
 			client.close()
+			break
+
 
 
 
@@ -433,8 +488,8 @@ while True:
 
 	t1.start()
 
-	# t1.join()
-	
+		# t1.join()
+		
 
 
 server.close()	
