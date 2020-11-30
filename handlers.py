@@ -149,6 +149,7 @@ def search_handler(user_name,client):
 			else:
 				first_search = subsequent_search
 		view_timeline_handler(user_name,client,"others")
+		if subsequent_search not in users[user_name]
 		client.send((f'1. Enter a friend request to : {subsequent_search}').encode('utf-8'))
 		
 		opt, cookies = recvData(client, 1024)

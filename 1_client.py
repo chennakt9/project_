@@ -5,6 +5,7 @@ import json
 import time
 from pprint import pprint
 import ast
+import sys
 import datetime
 
 
@@ -24,7 +25,11 @@ for cookie in list(cookies):  ##Removing Expired Cookies
 
 
 
-HOST = '127.0.0.1'
+if len(sys.argv)>1:
+	HOST = sys.argv[1]
+else:
+	HOST = '127.0.0.1'
+
 PORT = 12345
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

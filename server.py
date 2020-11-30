@@ -1,6 +1,7 @@
 import socket
 import threading
 import json
+import sys
 import datetime
 
 
@@ -175,7 +176,11 @@ def client_thread(client):
 
 
 
-HOST = '127.0.0.1'
+if len(sys.argv)>1:
+	HOST = sys.argv[1]
+else:
+	HOST = '127.0.0.1'
+
 PORT = 12345
 
 		
