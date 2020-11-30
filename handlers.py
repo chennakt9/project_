@@ -131,45 +131,124 @@ def frndreqts_handler(user_name,client):
 def search_handler(user_name,client):
 
 	registered_users= list(users.keys())
+	friends = users[user_name]['friends']
+
 	client.send(('<--Search any registered Users -->\n').encode('utf-8'))
 	first_search, cookies = recvData(client, 1024)
 	
 
 	if first_search not in registered_users:
-		while True:
-			matched_users=difflib.get_close_matches(first_search, registered_users)
-			client.send(('**Your search suggestion **\n'+'\n'.join(matched_users)+'\n\nChoose a suggestion || "q" to exit').encode('utf-8'))
-			subsequent_search, cookies = recvData(client, 1024)
-
-			if subsequent_search=="q":
-				return;
-
-			if subsequent_search in registered_users:
-				break
+		
+			matched_users=difflib.get_close_matches(first_search, registered_users,5)
+			if len(matched_users) == 0:
+				client.send(('user not found').encode('utf-8'))
 			else:
-				first_search = subsequent_search
-		view_timeline_handler(user_name,client,"others")
-		if subsequent_search not in users[user_name]
-		client.send((f'1. Enter a friend request to : {subsequent_search}').encode('utf-8'))
-		
-		opt, cookies = recvData(client, 1024)
-		if opt == "1":
+				client.send(('**Your search suggestion **\n'+'\n'.join(matched_users)+'\n\nChoose a suggestion || "q" to exit').encode('utf-8'))
+				subsequent_search, cookies = recvData(client, 1024)
+
+				if subsequent_search=="q":
+					return;
+
+				elif subsequent_search in registered_users:
+					if subsequent_search in friends: 
+						friends_handler(user_name,subsequent_search,client)
+					elif first_search == user_name:
+						you_handler(subsequent_search,client)
+					else:
+						nonfriends_handler(user_name,subsequent_search,client)
 			
-			users[subsequent_search]['frnd_reqts'].append(user_name)
-			client.send((f'Your request sucessfully sent  to: {subsequent_search}').encode('utf-8'))
 
-	else:		
-		view_timeline_handler(user_name,client,"others")
-		client.send((f'1. Enter a friend request to : {first_search}').encode('utf-8'))
+	else:
+		if first_search in friends: 
+			friends_handler(user_name,first_search,client)
+		elif first_search == user_name:
+			you_handler(first_search,client)
+		else:
+			nonfriends_handler(user_name,first_search,client)
 		
-		opt, cookies = recvData(client, 1024)
+	update_db(users)
 
-		if opt == "1":
+	
+
+def nonfriends_handler(user_name,first_search,client):
+	
+		homeoptions = f'''
+
+		{first_search}'s profile
+
+	 1. timeline
+	 2. friends
+	 3. Add as friend
+	 '''
+		client.send(homeoptions.encode('utf-8'))
+
+		opt, cookies = recvData(client, 1024)
+		if opt=='1':
+			view_timeline_handler(first_search,client,'others')
+			#some comment
+		
+		elif opt=='2':
+			target_friends = users[first_search]['friends']
+			client.send((f"**{first_search}'s Friends **\n"+'\n'.join(target_friends)).encode('utf-8'))
+
+		elif opt == "3":
 			
 			users[first_search]['frnd_reqts'].append(user_name)
 			client.send((f'Your request sucessfully sent  to: {first_search}').encode('utf-8'))
+			users[first_search]['notifications'].append([f"{user_name} sent you a friend request.", datetime.datetime.now().strftime('%d-%m-%Y %H:%M:%S.%f')])
+	
+	
 
-	update_db(users)
+def friends_handler(user_name,first_search,client):
+
+		homeoptions = f'''
+
+		{first_search}'s profile
+
+	 1. timeline
+	 2. friends 
+	 3. remove
+	 '''
+		client.send(homeoptions.encode('utf-8'))
+
+		opt, cookies = recvData(client, 1024)
+
+		if opt=='1':
+			view_timeline_handler(first_search,client,'others')
+			#some comment
+		
+		elif opt=='2':
+			target_friends = users[first_search]['friends']
+			client.send((f"**{first_search}'s Friends **\n"+'\n'.join(target_friends)).encode('utf-8'))
+		
+		elif opt=='3':
+			users[user_name]['friends'].remove(first_search)
+			users[first_search]['friends'].remove(user_name)
+			client.send((f"You are no longer friends with {target_user}").encode('utf-8'))
+
+		
+
+def you_handler(first_search,client):
+	
+		homeoptions = f'''
+
+		{first_search}'s(You) profile
+
+	 1. timeline
+	 2. friends 
+	 
+	 '''
+		client.send(homeoptions.encode('utf-8'))
+
+		opt, cookies = recvData(client, 1024)
+
+		if opt=='1':
+			view_timeline_handler(first_search,client,'own')
+			#some comment
+		
+		elif opt=='2':
+			target_friends = users[first_search]['friends']
+			client.send((f"**{first_search}'s Friends **\n"+'\n'.join(target_friends)).encode('utf-8'))
 
 
 def view_timeline_handler(user_name,client,type):
@@ -200,7 +279,7 @@ def view_timeline_handler(user_name,client,type):
 	client.send((prof).encode('utf-8'))
 
 
-def friends_handler(user_name,client):
+def yourfriends_handler(user_name,client):
 	
 	friends = users[user_name]['friends']
 
@@ -210,11 +289,12 @@ def friends_handler(user_name,client):
 
 	if target_user in friends:
 		homeoptions = f'''
-	 <--Choose an action-->
 
-	 1.{target_user}'s timeline
-	 2.{target_user}'s friends
-	 3.remove
+		{target_user}'s profile
+
+	 1. timeline
+	 2. friends 
+	 3. remove
 	 '''
 		client.send(homeoptions.encode('utf-8'))
 
@@ -234,6 +314,22 @@ def friends_handler(user_name,client):
 			client.send((f"You are no longer friends with {target_user}").encode('utf-8'))
 
 		
+	update_db(users) 
+
+def newsfeed_handler(user_name,client):
+
+	Newsfeed = users[user_name]['feed']
+
+	arr = []
+	
+	for usr,pst,t,vb in Newsfeed:
+		arr.append("\033[1m"+usr+"\033[0m"+"\n"+"\n"+pst)
+	
+		
+	client.send(("<-- Newsfeed -->\n--------------------------------------------\n" + "\n".join(arr[::-1]) + "\n--------------------------------------------").encode('utf-8'))
+
+
+
 	update_db(users) 
 
 
