@@ -71,10 +71,11 @@ def client_thread(client):
 	<==== Home Page ====>
 	Choose an action:
 
-	1. Send Private Message | 5. Upload new post
-	2. Search Reg Users     | 6. Notifications
-	3. View Chats           | 7. My Profile/TimeLine
-	4. Friend Options       | 8. logout
+	1. Send Private Message | 6. Upload new post
+	2. Search Reg Users     | 7. Notifications
+	3. View Chats           | 8. My Profile/TimeLine
+	4. Friend Options       | 9. logout
+	5. Newsfeed
 	'''
 		client.send(home_page_options.encode('utf-8'))
 
@@ -123,7 +124,7 @@ def client_thread(client):
 				opt, cookies = recvData(client, 1024)
 
 				if opt=='1':
-					friends_handler(user_name,client)
+					yourfriends_handler(user_name,client)
 				elif opt =='2':
 					frndreqts_handler(user_name,client)
 				elif opt == '3':
@@ -132,10 +133,10 @@ def client_thread(client):
 					continue
 
 
-		elif data=='5': # Upload New post
+		elif data=='6': # Upload New post
 			upload_new_post_handler(client,user_name)
 
-		elif data=='6': # Notifications
+		elif data=='7': # Notifications
 
 			while True:
 				notifications_handler(user_name,client)
@@ -146,10 +147,13 @@ def client_thread(client):
 				if opt=="q":
 					break
 		
-		elif data =='7': #My Profile/My Timeline
+		elif data =='8': #My Profile/My Timeline
 			view_timeline_handler(user_name,client,"own")
+
+		elif data=='5':
+			newsfeed_handler(user_name,client)
 		
-		elif data=='8': # logout
+		elif data=='9': # logout
 
 			users[user_name]['isOnline'] = False
 			
