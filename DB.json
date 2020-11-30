@@ -81,7 +81,7 @@
             "test1",
             "test2"
         ],
-        "isOnline": true,
+        "isOnline": false,
         "msgs": {},
         "frnd_reqts": [],
         "posts": [],
