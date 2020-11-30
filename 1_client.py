@@ -48,7 +48,7 @@ while True:
 
 	reply = ''
 	
-	if 'Choose' in data or 'Enter' in data or 'Search' in data:
+	if 'Choose' in data or 'Enter' in data or 'Search' in data or 'profile' in data :
 		reply = input("waiting for input : ")
 		print()
 	elif 'Username' in data:
