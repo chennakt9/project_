@@ -27,11 +27,11 @@ for cookie in list(session): ##Removing Expired Cookies
 
 
 def client_thread(client):
-
+	global users
 	while True:
 
-		global users
-		users = update_db(users)
+		
+		users = json.load(open('DB.json')) #importing database
 
 		global session
 		session = json.load(open('SESSION.json')) #importing session management database
@@ -91,7 +91,11 @@ def client_thread(client):
 
 
 		if data=='1': # private message
-
+			
+			
+			users[user_name]['isOnline'] = True;
+			users = update_db(users)
+		
 			chat_handler(user_name, client)
 		
 		elif data=='2': # search registered users
@@ -165,17 +169,29 @@ def client_thread(client):
 			users[user_name]['isOnline'] = False
 			
 			update_db(users) #Update users DB
-			for cookie in session:
-				if session[cookie]['user']==user_name:
+
+			cookie = ''
+			for ck in session:
+				if session[ck]['user']==user_name:
+					cookie = ck
 					break
 			
+			# print(cookie,session)
+
 			del session[cookie]
 			update_session(session)   # update server side session after logout
 
-			cookies = json.load(open('cookie_file_1.json'))   # update client side cookies after logout
+			if user_name=="test1":
+				file = 'cookie_file_1.json'
+			elif user_name =="test2":
+				file = 'cookie_file_2.json'
+			elif user_name =="test3":
+				file = 'cookie_file_3.json'
+
+			cookies = json.load(open(file))   # update client side cookies after logout
 			del cookies[cookie]    
 			parsed = json.dumps(cookies, indent=4)    
-			with open('cookie_file_1.json','w') as file:
+			with open(file,'w') as file:
 				file.write(parsed)
 
 			client.send(('Logged out successfully !!').encode('utf-8'))

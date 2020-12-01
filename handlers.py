@@ -54,9 +54,19 @@ def view_messages_handler(client,user_name,target_friend):
 
 def chat_handler(user_name,client):
 
+	global users
+
 	friends = users[user_name]['friends']
 
-	client.send(('<--Your Friends -->\n'+'\n'.join(friends)+'\n\nChoose a friend to start messaging:').encode('utf-8'))
+	friends_and_status = []
+
+	for fr in friends:
+		if users[fr]['isOnline']==True:
+			friends_and_status.append(fr + " ------ " + "Online")
+		else:
+			friends_and_status.append(fr + " ------ " + "Offline")
+	
+	client.send(('<--Your Friends -->\n'+'\n'.join(friends_and_status)+'\n\nChoose a friend to start messaging:').encode('utf-8'))
 
 	while True:
 		target_friend, cookies = recvData(client, 1024)
@@ -77,6 +87,9 @@ def chat_handler(user_name,client):
 				messg, cookies = recvData(client, 1024)
 				
 				if messg.lower()=="q":
+					
+					users[user_name]['isOnline'] = False;
+					users = update_db(users)
 					return
 
 				if messg.lower()=="m":
@@ -411,7 +424,7 @@ def login_handler(client):
 
 	client.send((f'Successfully Logged In as {usr}').encode('utf-8'))
 
-	users[usr]['isOnline'] = True;
+	
 
 
 	new_cookie = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
