@@ -33,8 +33,7 @@ def client_thread(client):
 	while True:
 
 		
-		global users
-		users = json.load(open('DB.json')) #importing database
+		
 		
 		global session
 		session = json.load(open('SESSION.json')) #importing session management database
@@ -100,6 +99,10 @@ def client_thread(client):
 
 		if data=='1': # private message
 			
+			global users
+			users = json.load(open('DB.json')) #importing database
+
+			print("before",users)
 			users[user_name]['isOnline'] = True;
 			users = update_db(users)
 

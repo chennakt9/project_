@@ -31,7 +31,7 @@ def upload_new_post_handler(client,user_name):
 	client.send(('Status updated successfully ..!').encode('utf-8'))
 	update_db(users)
 
-def view_messages_handler(client,user_name,target_friend):
+def view_messages_handler(client,user_name,target_friend,type):
 
 	global users
 	users = update_db(users.copy())
@@ -40,21 +40,29 @@ def view_messages_handler(client,user_name,target_friend):
 
 	if target_friend in users[user_name]['msgs']:
 
-		for msg in users[user_name]['msgs'][target_friend]:
-			if msg[0]=='sent':
+		for index,msg in enumerate(users[user_name]['msgs'][target_friend]):
+			if msg[0]=='sent' and type=="all":
 				m = f'        You: {msg[1]}'
 				messages_arr.append(m)
-			else:
+			elif msg[0]=='recieved':
+
+				if msg[3]=='not_seen':
+					users[user_name]['msgs'][target_friend][index][3] = 'seen'
+				
 				m = f'Your Friend: {msg[1]}'
 				messages_arr.append(m)
 
+
 		msgs = "--------------------------------------------\n" + "\n".join(messages_arr) + "\n--------------------------------------------"
 		client.send((msgs).encode('utf-8'))
+
+	users = update_db(users.copy())
 
 
 def chat_handler(user_name,client):
 
 	global users
+	users = json.load(open('DB.json')) #importing database
 
 	friends = users[user_name]['friends']
 
@@ -78,7 +86,7 @@ def chat_handler(user_name,client):
 			else:
 				client.send(('Your Friend is offline, your messages may be seen later..').encode('utf-8'))
 			
-			view_messages_handler(client,user_name,target_friend) # View Previous messages
+			view_messages_handler(client,user_name,target_friend,"all") # View Previous messages
 
 			while True:
 
@@ -94,13 +102,13 @@ def chat_handler(user_name,client):
 
 				if messg.lower()=="m":
 
-					view_messages_handler(client,user_name,target_friend)
+					view_messages_handler(client,user_name,target_friend,"all")
 				else:
 					
 					update_messages(users, user_name, target_friend, messg)
 					update_db(users)
 					
-					view_messages_handler(client,user_name,target_friend)
+					view_messages_handler(client,user_name,target_friend,"all")
 			
 				
 		else:
