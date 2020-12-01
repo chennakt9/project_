@@ -152,7 +152,17 @@ def client_thread(client):
 					break
 				else:
 					continue
+		
+		elif data=='5':
+			while True:
+				newsfeed_handler(user_name,client)
 
+				client.send(('Enter "q" to exit').encode('utf-8'))
+				opt, cookies = recvData(client, 1024)
+
+				if opt=="q":
+					break
+				
 
 		elif data=='6': # Upload New post
 			upload_new_post_handler(client,user_name)
@@ -171,8 +181,7 @@ def client_thread(client):
 		elif data =='8': #My Profile/My Timeline
 			view_timeline_handler(user_name,client,"own")
 
-		elif data=='5':
-			newsfeed_handler(user_name,client)
+		
 		
 		elif data=='9': # logout
 

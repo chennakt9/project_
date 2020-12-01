@@ -2,32 +2,20 @@
     "test1": {
         "password": "pass1",
         "friends": [
-            "test3",
             "test2",
+            "test3",
             "test4"
         ],
-        "isOnline": true,
-        "msgs": {
-            "test2": [
-                [
-                    "sent",
-                    "hey man",
-                    "01-12-2020 22:43:03.623104"
-                ],
-                [
-                    "sent",
-                    "you there",
-                    "01-12-2020 22:51:43.430795"
-                ]
-            ]
-        },
+        "isOnline": false,
+        "msgs": {},
         "frnd_reqts": [],
         "posts": [
             [
                 "test1",
-                "Hey there, this is my first post yo !",
-                "29-11-2020 16:30:43.880988",
-                "public"
+                "hey there i'm testing",
+                "01-12-2020 23:26:10.166864",
+                "public",
+                "not_seen"
             ]
         ],
         "feed": [],
@@ -36,81 +24,7 @@
     "test2": {
         "password": "pass2",
         "friends": [
-            "test3",
-            "test1",
-            "test4"
-        ],
-        "isOnline": false,
-        "msgs": {
-            "test1": [
-                [
-                    "recieved",
-                    "hey man",
-                    "01-12-2020 22:43:03.623144",
-                    "not_seen"
-                ],
-                [
-                    "recieved",
-                    "you there",
-                    "01-12-2020 22:51:43.430857",
-                    "not_seen"
-                ]
-            ]
-        },
-        "frnd_reqts": [
-            "test4"
-        ],
-        "posts": [],
-        "feed": [
-            [
-                "test1",
-                "Hey there, this is my first post yo !",
-                "29-11-2020 16:30:43.880988",
-                "public"
-            ]
-        ],
-        "notifications": [
-            [
-                "test4 sent you a friend request.",
-                "29-11-2020 20:30:53.227016"
-            ],
-            [
-                "test4 sent you a friend request.",
-                "01-12-2020 00:06:59.219170"
-            ],
-            [
-                "You have new messages from test1",
-                "01-12-2020 22:51:43.434346"
-            ]
-        ]
-    },
-    "test3": {
-        "password": "pass3",
-        "friends": [
-            "test1",
-            "test2"
-        ],
-        "isOnline": false,
-        "msgs": {},
-        "frnd_reqts": [
-            "test4"
-        ],
-        "posts": [],
-        "feed": [
-            [
-                "test1",
-                "Hey there, this is my first post yo !",
-                "29-11-2020 16:30:43.880988",
-                "public"
-            ]
-        ],
-        "notifications": []
-    },
-    "test4": {
-        "password": "pass4",
-        "friends": [
-            "test1",
-            "test2"
+            "test1"
         ],
         "isOnline": false,
         "msgs": {},
@@ -119,16 +33,58 @@
         "feed": [
             [
                 "test1",
-                "Hey there, this is my first post yo !",
-                "29-11-2020 16:30:43.880988",
-                "public"
+                "hey there i'm testing",
+                "01-12-2020 23:26:10.166864",
+                "public",
+                "seen"
             ]
         ],
         "notifications": [
+            "test1 has shared a new post.."
+        ]
+    },
+    "test3": {
+        "password": "pass3",
+        "friends": [
+            "test1"
+        ],
+        "isOnline": false,
+        "msgs": {},
+        "frnd_reqts": [],
+        "posts": [],
+        "feed": [
             [
-                "test2 has accepted your request.",
-                "01-12-2020 00:08:45.943275"
+                "test1",
+                "hey there i'm testing",
+                "01-12-2020 23:26:10.166864",
+                "public",
+                "not_seen"
             ]
+        ],
+        "notifications": [
+            "test1 has shared a new post.."
+        ]
+    },
+    "test4": {
+        "password": "pass4",
+        "friends": [
+            "test1"
+        ],
+        "isOnline": false,
+        "msgs": {},
+        "frnd_reqts": [],
+        "posts": [],
+        "feed": [
+            [
+                "test1",
+                "hey there i'm testing",
+                "01-12-2020 23:26:10.166864",
+                "public",
+                "not_seen"
+            ]
+        ],
+        "notifications": [
+            "test1 has shared a new post.."
         ]
     }
 }

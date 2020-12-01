@@ -22,14 +22,44 @@ def upload_new_post_handler(client,user_name):
 	time_stamp = datetime.datetime.now().strftime('%d-%m-%Y %H:%M:%S.%f')
 	post = [user_name, status, time_stamp, visibility]
 
-	users[user_name]['posts'].append(post)
+	users[user_name]['posts'].append(post.copy())
 
+	post.append("not_seen")
 	if visibility=='public' or visibility=='private':
 		for friend in users[user_name]['friends']:
 			users[friend]['feed'].append(post)
 			users[friend]['notifications'].append(f'{user_name} has shared a new post..')
 
 	client.send(('Status updated successfully ..!').encode('utf-8'))
+	update_db(users)
+
+
+def newsfeed_handler(user_name,client):
+
+	newsfeed = users[user_name]['feed']
+
+	arr = []
+	
+	for index,item in enumerate(newsfeed):
+		usr,pst,t,vb,st = item
+
+		if st=="not_seen":
+			users[user_name]['feed'][index][4] = "seen"
+			arr.append("\033[1m"+usr+"\033[0m"+"\n"+"\n"+pst+"\n--------------------------------------------\n")
+	
+	if len(newsfeed)-len(arr) >= 2:
+		for index,item in enumerate(newsfeed):
+			usr,pst,t,vb,st = item
+
+			if st=="seen":
+				arr.append("\033[1m"+usr+"\033[0m"+"\n"+"\n"+pst+"\n--------------------------------------------\n")
+	
+
+
+	client.send(("<-- Newsfeed -->\n--------------------------------------------\n" + "\n".join(arr[::-1])).encode('utf-8'))
+
+
+
 	update_db(users)
 
 def view_messages_handler(client,user_name,target_friend,type):
@@ -344,21 +374,7 @@ def yourfriends_handler(user_name,client):
 		
 	update_db(users) 
 
-def newsfeed_handler(user_name,client):
-
-	Newsfeed = users[user_name]['feed']
-
-	arr = []
-	
-	for usr,pst,t,vb in Newsfeed:
-		arr.append("\033[1m"+usr+"\033[0m"+"\n"+"\n"+pst+"\n--------------------------------------------\n")
-	
-		
-	client.send(("<-- Newsfeed -->\n--------------------------------------------\n" + "\n".join(arr[::-1]) + "\n--------------------------------------------").encode('utf-8'))
-
-
-
-	update_db(users) 
+ 
 
 
 def notifications_handler(user_name,client):
