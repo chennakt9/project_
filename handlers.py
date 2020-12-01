@@ -323,7 +323,7 @@ def newsfeed_handler(user_name,client):
 	arr = []
 	
 	for usr,pst,t,vb in Newsfeed:
-		arr.append("\033[1m"+usr+"\033[0m"+"\n"+"\n"+pst)
+		arr.append("\033[1m"+usr+"\033[0m"+"\n"+"\n"+pst+"\n--------------------------------------------\n")
 	
 		
 	client.send(("<-- Newsfeed -->\n--------------------------------------------\n" + "\n".join(arr[::-1]) + "\n--------------------------------------------").encode('utf-8'))
