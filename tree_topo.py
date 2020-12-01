@@ -11,10 +11,14 @@ h1 = net.get('h1')
 h2 = net.get('h2')
 HOST = h1.IP()
 
-h1.popen(f'python server.py {HOST}',stdout=sys.stdout,stderr=sys.stdout,stdin=sys.stdin)
-h2.popen(f'python 1_client.py {HOST}',stdout=sys.stdout,stderr=sys.stdout,stdin=sys.stdin)
+# p1 = h1.popen(f'python server.py {HOST}')
+# p2 = h2.popen(f'python 1_client.py {HOST}')
+
+
 
 net.pingAll()
-# CLI( net )
+CLI( net)
+
 
 net.stop()
+net.cleanup()
