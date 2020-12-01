@@ -51,7 +51,7 @@ while True:
 	data = undcd_data.decode('utf-8')
 
 
-
+	print(cookies)
 	print(data)
 
 	

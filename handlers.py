@@ -393,6 +393,10 @@ def register_handler(client):
 
 
 def login_handler(client):
+	global users
+	global session
+
+	
 	client.send(('Log in... \n\n**Username**').encode('utf-8'))
 	
 	usr, cookies = recvData(client, 1024)
@@ -414,7 +418,9 @@ def login_handler(client):
 	set_cookie(client,session,usr,new_cookie)
 	
 
-	update_db(users) 
+	
+	users = update_db(users) 
+	session = update_session(session)
 
 	return usr;
 

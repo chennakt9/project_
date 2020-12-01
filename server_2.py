@@ -32,6 +32,18 @@ def client_thread(client):
 
 	while True:
 
+		
+		global users
+		users = update_db(users)
+		
+		global session
+		session = json.load(open('SESSION.json')) #importing session management database
+		
+		print(session,"after import")
+
+
+		
+
 		login_page_options = '''
 		<==== Login/Register Page ====>
 		Choose an action:

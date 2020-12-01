@@ -14,7 +14,6 @@ from handlers import *
 
 
  
-
 for cookie in list(session): ##Removing Expired Cookies
 	curr_datetime = datetime.datetime.now()
 	cookie_datetime = datetime.datetime.strptime(session[cookie]['expires_on'], '%d-%m-%Y %H:%M:%S.%f')
@@ -26,9 +25,18 @@ for cookie in list(session): ##Removing Expired Cookies
 
 
 
+
 def client_thread(client):
 
 	while True:
+
+		global users
+		users = update_db(users)
+		
+		global session
+		session = json.load(open('SESSION.json')) #importing session management database
+
+		
 
 		login_page_options = '''
 		<==== Login/Register Page ====>

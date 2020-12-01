@@ -24,7 +24,7 @@ def update_session(session):
 	with open('SESSION.json','w') as file:
 		file.write(parsed)
 	
-	session = json.load(open('DB.json'))
+	session = json.load(open('SESSION.json'))
 
 	return session
 
