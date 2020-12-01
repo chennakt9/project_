@@ -27,6 +27,7 @@ def upload_new_post_handler(client,user_name):
 	if visibility=='public' or visibility=='private':
 		for friend in users[user_name]['friends']:
 			users[friend]['feed'].append(post)
+			users[friend]['notifications'].append(f'{user_name} has shared a new post..')
 
 	client.send(('Status updated successfully ..!').encode('utf-8'))
 	update_db(users)
@@ -88,6 +89,7 @@ def chat_handler(user_name,client):
 			
 			view_messages_handler(client,user_name,target_friend,"all") # View Previous messages
 
+			msg_flag = False
 			while True:
 
 				
@@ -109,6 +111,11 @@ def chat_handler(user_name,client):
 					update_db(users)
 					
 					view_messages_handler(client,user_name,target_friend,"all")
+
+					if msg_flag == False:
+						users[target_friend]['notifications'].append([f'You have new message/s from {user_name}', datetime.datetime.now().strftime('%d-%m-%Y %H:%M:%S.%f')])
+						msg_flag = True
+					update_db(users)
 			
 				
 		else:
@@ -138,7 +145,7 @@ def frndreqts_handler(user_name,client):
 			users[user_name]['friends'].append(target_user)
 			users[user_name]['frnd_reqts'].remove(target_user)
 
-			users[target_user]['notifications'].append(f"{user_name} has accepted your request.")
+			users[target_user]['notifications'].append([f"{user_name} has accepted your request.", datetime.datetime.now().strftime('%d-%m-%Y %H:%M:%S.%f')])
 
 			users[target_user]['friends'].append(user_name)
 			users[target_user]['notifications'].append([f"{user_name} has accepted your request.", datetime.datetime.now().strftime('%d-%m-%Y %H:%M:%S.%f')])

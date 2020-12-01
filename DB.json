@@ -6,19 +6,18 @@
             "test2",
             "test4"
         ],
-        "isOnline": false,
+        "isOnline": true,
         "msgs": {
             "test2": [
                 [
                     "sent",
-                    "hello there",
-                    "01-12-2020 18:41:56.840393"
+                    "hey man",
+                    "01-12-2020 22:43:03.623104"
                 ],
                 [
-                    "recieved",
-                    "hey ",
-                    "01-12-2020 18:42:13.883435",
-                    "seen"
+                    "sent",
+                    "you there",
+                    "01-12-2020 22:51:43.430795"
                 ]
             ]
         },
@@ -46,19 +45,19 @@
             "test1": [
                 [
                     "recieved",
-                    "hello there",
-                    "01-12-2020 18:41:56.840442",
+                    "hey man",
+                    "01-12-2020 22:43:03.623144",
                     "not_seen"
                 ],
                 [
-                    "sent",
-                    "hey ",
-                    "01-12-2020 18:42:13.883377"
+                    "recieved",
+                    "you there",
+                    "01-12-2020 22:51:43.430857",
+                    "not_seen"
                 ]
             ]
         },
         "frnd_reqts": [
-            "test4",
             "test4"
         ],
         "posts": [],
@@ -78,6 +77,10 @@
             [
                 "test4 sent you a friend request.",
                 "01-12-2020 00:06:59.219170"
+            ],
+            [
+                "You have new messages from test1",
+                "01-12-2020 22:51:43.434346"
             ]
         ]
     },
