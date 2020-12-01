@@ -24,7 +24,7 @@ def update_session(session):
 	with open('SESSION.json','w') as file:
 		file.write(parsed)
 	
-	session = json.load(open('DB.json'))
+	session = json.load(open('SESSION.json'))
 
 	return session
 
@@ -32,9 +32,23 @@ def update_session(session):
 def set_cookie(client,session,usr,new_cookie):
 	time_stamp = (datetime.datetime.now()+ datetime.timedelta(days=5)).strftime('%d-%m-%Y %H:%M:%S.%f')
 	session[new_cookie] = {"user":usr,"expires_on": time_stamp}
-	update_session(session) 
-	cookie_data = "set_cookie" + "|" + new_cookie + "|" + str({"expires_on":time_stamp})
-	client.send(cookie_data.encode('utf-8'))
+	update_session(session)
+	
+	if usr=="test1":
+		file = 'cookie_file_1.json'
+	elif usr =="test2":
+		file = 'cookie_file_2.json'
+	elif usr =="test3":
+		file = 'cookie_file_3.json'
+
+	
+	cookies = json.load(open(file))   # update client side cookies after login
+	cookies[new_cookie] = {"expires_on":time_stamp}
+	parsed = json.dumps(cookies, indent=4)    
+	with open(file,'w') as file:
+		file.write(parsed)
+			
+
 
 
 

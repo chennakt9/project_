@@ -1,3 +1,5 @@
+
+
 import socket
 import threading
 import json
@@ -27,13 +29,19 @@ for cookie in list(session): ##Removing Expired Cookies
 
 
 def client_thread(client):
-	
+
 	while True:
 
 		
-
+		
+		
 		global session
 		session = json.load(open('SESSION.json')) #importing session management database
+		
+		print("session in server 2 : ", session)
+
+
+		
 
 		login_page_options = '''
 		<==== Login/Register Page ====>
@@ -87,18 +95,17 @@ def client_thread(client):
 
 		data, cookies = recvData(client, 1024)
 
-		
+
 
 		if data=='1': # private message
 			
 			global users
 			users = json.load(open('DB.json')) #importing database
 
-			# print("before",users)
+			print("before",users)
 			users[user_name]['isOnline'] = True;
 			users = update_db(users)
 
-				
 			chat_handler(user_name, client)
 		
 		elif data=='2': # search registered users
@@ -111,19 +118,9 @@ def client_thread(client):
 
 			target_friend, cookies = recvData(client, 1024)
 
-			client.send(('Choose and option:\n1.View all chats\n2.View Unread chats\n').encode('utf-8'))
-
-			ch, cookies = recvData(client, 1024)
-
-			
-
 			while True:
 
-				if ch=='1':
-					view_messages_handler(client,user_name,target_friend,"all")
-				elif ch=='2':
-					view_messages_handler(client,user_name,target_friend,"un_read")
-
+				view_messages_handler(client,user_name,target_friend)
 				client.send(('Enter "q" to exit').encode('utf-8'))
 				opt, cookies = recvData(client, 1024)
 
@@ -210,6 +207,7 @@ def client_thread(client):
 			client.send(('Logged out successfully !!').encode('utf-8'))
 			client.close()
 			break
+
 
 
 

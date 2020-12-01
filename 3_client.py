@@ -10,7 +10,7 @@ import datetime
 
 
 
-cookies = json.load(open('cookie_file_1.json'))
+cookies = json.load(open('cookie_file_3.json'))
 
 for cookie in list(cookies):  ##Removing Expired Cookies
 
@@ -20,7 +20,7 @@ for cookie in list(cookies):  ##Removing Expired Cookies
 	if cookie_datetime<curr_datetime:
 		del cookies[cookie]    
 		parsed = json.dumps(cookies, indent=4)    
-		with open('cookie_file_1.json','w') as file:
+		with open('cookie_file_3.json','w') as file:
 			file.write(parsed)
 
 
@@ -36,7 +36,6 @@ if len(sys.argv)==2:
 if len(sys.argv)==3:
 	HOST = sys.argv[1]
 	PORT = int(sys.argv[2])
-
 
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
