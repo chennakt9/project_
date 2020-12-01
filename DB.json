@@ -27,7 +27,7 @@
             "test1",
             "test4"
         ],
-        "isOnline": false,
+        "isOnline": true,
         "msgs": {},
         "frnd_reqts": [
             "test4",
