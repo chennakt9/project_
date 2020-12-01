@@ -160,7 +160,7 @@ def search_handler(user_name,client):
 
 	if first_search not in registered_users:
 		
-			matched_users=difflib.get_close_matches(first_search, registered_users,5)
+			matched_users=difflib.get_close_matches(first_search, registered_users,5,0.337999999999999)
 			if len(matched_users) == 0:
 				client.send(('user not found').encode('utf-8'))
 			else:
@@ -348,7 +348,7 @@ def newsfeed_handler(user_name,client):
 	
 		
 	client.send(("<-- Newsfeed -->\n--------------------------------------------\n" + "\n".join(arr[::-1]) + "\n--------------------------------------------").encode('utf-8'))
-
+	
 
 
 	update_db(users) 
@@ -367,7 +367,7 @@ def notifications_handler(user_name,client):
 	client.send(("<-- Notifications -->\n--------------------------------------------\n" + "\n".join(arr[::-1]) + "\n--------------------------------------------").encode('utf-8'))
 
 
-
+	
 	update_db(users) 
 
 

@@ -2,7 +2,6 @@
     "test1": {
         "password": "pass1",
         "friends": [
-            "test3",
             "test2",
             "test4"
         ],
@@ -32,7 +31,12 @@
             ]
         ],
         "feed": [],
-        "notifications": []
+        "notifications": [
+            [
+                "test4 sent you a friend request.",
+                "29-11-2020 20:30:53.227016"
+            ]
+        ]
     },
     "test2": {
         "password": "pass2",
@@ -84,7 +88,6 @@
     "test3": {
         "password": "pass3",
         "friends": [
-            "test1",
             "test2"
         ],
         "isOnline": false,
@@ -106,12 +109,14 @@
     "test4": {
         "password": "pass4",
         "friends": [
-            "test1",
-            "test2"
+            "test2",
+            "test1"
         ],
         "isOnline": false,
         "msgs": {},
-        "frnd_reqts": [],
+        "frnd_reqts": [
+            "test1"
+        ],
         "posts": [],
         "feed": [
             [
@@ -125,6 +130,15 @@
             [
                 "test2 has accepted your request.",
                 "01-12-2020 00:08:45.943275"
+            ],
+            [
+                "test1 sent you a friend request.",
+                "01-12-2020 21:51:49.827733"
+            ],
+            "test1 has accepted your request.",
+            [
+                "test1 has accepted your request.",
+                "02-12-2020 01:07:15.352758"
             ]
         ]
     }
