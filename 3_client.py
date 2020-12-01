@@ -10,7 +10,7 @@ import datetime
 
 
 
-cookies = json.load(open('cookie_file_2.json'))
+cookies = json.load(open('cookie_file_3.json'))
 
 for cookie in list(cookies):  ##Removing Expired Cookies
 
@@ -20,7 +20,7 @@ for cookie in list(cookies):  ##Removing Expired Cookies
 	if cookie_datetime<curr_datetime:
 		del cookies[cookie]    
 		parsed = json.dumps(cookies, indent=4)    
-		with open('cookie_file_2.json','w') as file:
+		with open('cookie_file_3.json','w') as file:
 			file.write(parsed)
 
 
@@ -36,6 +36,7 @@ if len(sys.argv)==2:
 if len(sys.argv)==3:
 	HOST = sys.argv[1]
 	PORT = int(sys.argv[2])
+
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client.connect((HOST, PORT))
@@ -58,7 +59,9 @@ while True:
 
 	reply = ''
 	
+
 	if 'Choose' in data or 'Enter' in data or 'Search' in data or 'profile' in data :
+
 		reply = input("waiting for input : ")
 		print()
 	elif 'Username' in data:
@@ -67,16 +70,7 @@ while True:
 	elif 'Password' in data:
 		reply = getpass.getpass('enter password : ')
 		print()
-	elif 'set_cookie' in data:
 
-		cookie,validity = data.split("|")[1:]
-		cookies[cookie] = ast.literal_eval(validity)
-
-		parsed = json.dumps(cookies, indent=4)
-
-		with open('cookie_file_2.json','w') as file:
-
-			file.write(parsed)
 		
 
 	if reply!="":

@@ -6,8 +6,22 @@
             "test2",
             "test4"
         ],
-        "isOnline": false,
-        "msgs": {},
+        "isOnline": true,
+        "msgs": {
+            "test3": [
+                [
+                    "recieved",
+                    " hello madam",
+                    "01-12-2020 07:29:04.795416",
+                    "not_seen"
+                ],
+                [
+                    "sent",
+                    "hi sir",
+                    "01-12-2020 07:30:00.093972"
+                ]
+            ]
+        },
         "frnd_reqts": [],
         "posts": [
             [
@@ -60,7 +74,21 @@
             "test2"
         ],
         "isOnline": true,
-        "msgs": {},
+        "msgs": {
+            "test1": [
+                [
+                    "sent",
+                    " hello madam",
+                    "01-12-2020 07:29:04.795379"
+                ],
+                [
+                    "recieved",
+                    "hi sir",
+                    "01-12-2020 07:30:00.094003",
+                    "not_seen"
+                ]
+            ]
+        },
         "frnd_reqts": [
             "test4"
         ],

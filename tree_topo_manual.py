@@ -56,7 +56,7 @@ class CustomTopo2(Topo):
 
 net = Mininet(CustomTopo2(bw=10), link=TCLink,cleanup=True)
 net.start()
-net.pingAll()
+# net.pingAll()
 CLI(net)
 
 

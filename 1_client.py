@@ -25,12 +25,19 @@ for cookie in list(cookies):  ##Removing Expired Cookies
 
 
 
-if len(sys.argv)>1:
-	HOST = sys.argv[1]
-else:
+if len(sys.argv)==1:
 	HOST = '127.0.0.1'
+	PORT = 12345
 
-PORT = 12345
+if len(sys.argv)==2:
+	HOST = sys.argv[1]
+	PORT = 12345
+
+if len(sys.argv)==3:
+	HOST = sys.argv[1]
+	PORT = int(sys.argv[2])
+
+
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client.connect((HOST, PORT))
