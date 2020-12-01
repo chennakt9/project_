@@ -14,8 +14,7 @@
                 "test1",
                 "hey there i'm testing",
                 "01-12-2020 23:26:10.166864",
-                "public",
-                "not_seen"
+                "public"
             ]
         ],
         "feed": [],
@@ -58,7 +57,7 @@
                 "hey there i'm testing",
                 "01-12-2020 23:26:10.166864",
                 "public",
-                "not_seen"
+                "seen"
             ]
         ],
         "notifications": [
