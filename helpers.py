@@ -32,9 +32,15 @@ def update_session(session):
 def set_cookie(client,session,usr,new_cookie):
 	time_stamp = (datetime.datetime.now()+ datetime.timedelta(days=5)).strftime('%d-%m-%Y %H:%M:%S.%f')
 	session[new_cookie] = {"user":usr,"expires_on": time_stamp}
-	update_session(session) 
-	cookie_data = "set_cookie" + "|" + new_cookie + "|" + str({"expires_on":time_stamp})
-	client.send(cookie_data.encode('utf-8'))
+	update_session(session)
+
+	cookies = json.load(open('cookie_file_1.json'))   # update client side cookies after login
+	cookies[new_cookie] = {"expires_on":time_stamp}
+	parsed = json.dumps(cookies, indent=4)    
+	with open('cookie_file_1.json','w') as file:
+		file.write(parsed)
+			
+
 
 
 
