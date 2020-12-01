@@ -6,7 +6,7 @@
             "test2",
             "test4"
         ],
-        "isOnline": true,
+        "isOnline": false,
         "msgs": {},
         "frnd_reqts": [],
         "posts": [
